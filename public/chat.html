@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chat Room</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/emoji-picker-element@1.11.2/index.min.css" />
+  <style>
+    emoji-picker {
+      position: absolute;
+      bottom: 60px;
+      right: 20px;
+      z-index: 10;
+    }
+
+    .message img {
+      max-width: 200px;
+      border-radius: 10px;
+      margin-top: 5px;
+    }
+
+    /* Kick button styling */
+    .kick-button {
+      margin-left: 8px;
+      background-color: transparent;
+      border: none;
+      color: red;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .kick-button:hover {
+      color: darkred;
+    }
+
+    /* Optional: style user list spacing */
+    #user-list li {
+      margin: 5px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+  <!-- Top Navigation Bar -->
+  <div class="top-bar">
+    <h2 id="room-title">Room: </h2>
+    <div class="mode-toggle">
+      <label class="switch">
+        <input type="checkbox" id="theme-toggle" />
+        <span class="slider"></span>
+      </label>
+      <span>🌙/☀️</span>
+    </div>
+    <button id="sound-toggle" title="Toggle Sound Notifications">🔔</button>
+    <button id="leave-btn" title="Leave Chat Room">🚪 Leave</button>
+  </div>
+
+  <!-- Chat Layout -->
+  <div class="chat-container">
+    <!-- Users Panel -->
+    <div class="users-panel">
+      <h3>Users</h3>
+      <ul id="user-list"></ul>
+    </div>
+
+    <!-- Chat Messages & Form -->
+    <div class="messages-panel">
+      <div id="messages"></div>
+
+      <!-- Message Form -->
+      <form id="msgForm">
+        <input type="file" id="file-input" style="display: none;" accept="image/*,video/*,.pdf,.doc,.txt,.zip" />
+        <div id="file-preview" class="file-preview" style="display:none;"></div>
+        <textarea id="message" placeholder="Type a message..."></textarea>
+        <div class="form-controls">
+          <label for="file-input" title="Attach File">📎</label>
+          <button type="button" id="emoji-btn" title="Emoji Picker">😊</button>
+          <button type="submit" title="Send Message">Send</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/emoji-picker-element@1.11.2/index.js"></script>
+  <script src="client.js"></script>
+
+  <!-- Emoji Picker Script -->
+  <script>
+    const emojiBtn = document.getElementById("emoji-btn");
+    const messageInput = document.getElementById("message");
+    let picker;
+
+    emojiBtn.addEventListener("click", () => {
+      if (!picker) {
+        picker = document.createElement("emoji-picker");
+        document.body.appendChild(picker);
+        picker.addEventListener("emoji-click", (event) => {
+          messageInput.value += event.detail.unicode;
+          messageInput.focus();
+        });
+      } else {
+        picker.remove();
+        picker = null;
+      }
+    });
+  </script>
+
+  <!-- Leave Room -->
+  <script>
+    document.getElementById("leave-btn").addEventListener("click", () => {
+      window.location.href = "index.html";
+    });
+  </script>
+
+  <!-- Room Title -->
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const roomName = urlParams.get("room");
+    if (roomName) {
+      document.getElementById("room-title").textContent = `Room: ${roomName}`;
+    }
+  </script>
+
+  <!-- Theme Toggle -->
+  <script>
+    const themeToggle = document.getElementById("theme-toggle");
+    if (localStorage.getItem("darkMode") === "true") {
+      document.body.classList.add("dark-mode");
+      themeToggle.checked = true;
+    }
+    themeToggle.addEventListener("change", () => {
+      document.body.classList.toggle("dark-mode");
+      localStorage.setItem("darkMode", themeToggle.checked);
+    });
+  </script>
+</body>
+</html>

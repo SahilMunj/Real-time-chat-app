@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chat Entry</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: radial-gradient(circle, #00bfff33 1px, transparent 1px);
+      background-size: 40px 40px;
+      z-index: -1;
+      opacity: 0.2;
+      animation: bgScroll 40s linear infinite;
+    }
+
+    @keyframes bgScroll {
+      from { background-position: 0 0; }
+      to { background-position: 1000px 1000px; }
+    }
+
+    .logo {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: bold;
+      color: #0077cc;
+      margin: 20px 0 10px;
+    }
+
+    .dark-mode .logo {
+      color: #66ccff;
+    }
+
+    button[type="submit"] {
+      transition: box-shadow 0.3s;
+    }
+
+    button[type="submit"]:hover {
+      box-shadow: 0 0 10px #28a745aa, 0 0 20px #28a74555;
+    }
+
+    .error-msg {
+      color: red;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Theme Toggle -->
+  <div class="mode-toggle">
+    <label class="switch">
+      <input type="checkbox" id="theme-toggle" />
+      <span class="slider"></span>
+    </label>
+    <span>🌙/☀️</span>
+  </div>
+
+  <!-- Title -->
+  <div class="logo">💬 Real-Time Chat</div>
+
+  <!-- Main Container -->
+  <div class="container">
+    <h2 id="form-title">Join a Chat Room</h2>
+    <div class="tabs">
+      <button onclick="showTab('join')" class="active-tab">Join Room</button>
+      <button onclick="showTab('create')">Create Room</button>
+    </div>
+
+    <!-- Join Form -->
+    <form id="join-form" action="chat.html">
+      <input type="text" id="join-username" placeholder="Enter your name" required />
+      <input type="text" id="join-room" placeholder="Enter room name" required />
+      <input type="password" id="join-password" placeholder="Room password" required />
+      <p id="join-error" class="error-msg"></p>
+      <button type="submit" onclick="return handleJoinRoom()">Join</button>
+    </form>
+
+    <!-- Create Form -->
+    <form id="create-form" style="display: none" action="chat.html">
+      <input type="text" id="create-username" placeholder="Enter your name" required />
+      <input type="text" id="create-room" placeholder="Room name" required />
+      <input type="password" id="create-password" placeholder="Set password" required />
+      <button type="submit" onclick="return handleCreateRoom()">Create</button>
+    </form>
+  </div>
+
+  <!-- Sound Effect -->
+  <audio id="btnSound" src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3" preload="auto"></audio>
+
+  <!-- Scripts -->
+  <script>
+    function showTab(tab) {
+      const joinForm = document.getElementById('join-form');
+      const createForm = document.getElementById('create-form');
+      const title = document.getElementById('form-title');
+      const buttons = document.querySelectorAll('.tabs button');
+
+      if (tab === 'join') {
+        joinForm.style.display = 'block';
+        createForm.style.display = 'none';
+        title.innerText = 'Join a Chat Room';
+      } else {
+        joinForm.style.display = 'none';
+        createForm.style.display = 'block';
+        title.innerText = 'Create a Chat Room';
+      }
+
+      buttons.forEach(btn => btn.classList.remove('active-tab'));
+      document.querySelector(`.tabs button[onclick="showTab('${tab}')"]`).classList.add('active-tab');
+    }
+
+    function playSound() {
+      const sound = document.getElementById("btnSound");
+      sound.play().catch(() => {}); // Ignore autoplay errors
+    }
+
+    function handleJoinRoom() {
+      playSound();
+      localStorage.setItem('username', document.getElementById('join-username').value);
+      localStorage.setItem('room', document.getElementById('join-room').value);
+      localStorage.setItem('password', document.getElementById('join-password').value);
+      localStorage.setItem('isCreator', 'false');
+      return true;
+    }
+
+    function handleCreateRoom() {
+      playSound();
+      localStorage.setItem('username', document.getElementById('create-username').value);
+      localStorage.setItem('room', document.getElementById('create-room').value);
+      localStorage.setItem('password', document.getElementById('create-password').value);
+      localStorage.setItem('isCreator', 'true');
+      return true;
+    }
+
+    // Theme toggle persistence
+    const themeToggle = document.getElementById("theme-toggle");
+    if (localStorage.getItem("darkMode") === "true") {
+      document.body.classList.add("dark-mode");
+      themeToggle.checked = true;
+    }
+
+    themeToggle.addEventListener("change", () => {
+      document.body.classList.toggle("dark-mode");
+      localStorage.setItem("darkMode", themeToggle.checked);
+    });
+  </script>
+</body>
+</html>
