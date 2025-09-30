@@ -40,6 +40,7 @@ chat-app/
 ├── notifications.mp3 # Notification sound
 ├── server.js
 ├── package.json
+├──preview.png
 └── README.md
 
 ## ▶️ How to Run Locally
@@ -61,11 +62,16 @@ Render
 
 Vercel (Frontend + API proxy)
 
-Railway
+## 🌐 Live Preview
 
-Glitch
+<p align="center">
+  <a href="https://your-deployed-site-link.com" target="_blank">
+    <img src="preview.png" alt="Chat App Preview" width="700px" style="border-radius:10px; border:1px solid #ccc;" />
+  </a>
+</p>
 
-Heroku (if still available)
+👉 Click the preview image above to open the live app.
+
 
 📄 License
 This project is licensed under the MIT License.
