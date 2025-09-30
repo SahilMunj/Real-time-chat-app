@@ -65,7 +65,7 @@ Vercel (Frontend + API proxy)
 ## 🌐 Live Preview
 
 <p align="center">
-  <a href="https://your-deployed-site-link.com" target="_blank">
+  <a href="https://real-time-chat-app-pazo.onrender.com" target="_blank">
     <img src="preview.png" alt="Chat App Preview" width="700px" style="border-radius:10px; border:1px solid #ccc;" />
   </a>
 </p>
